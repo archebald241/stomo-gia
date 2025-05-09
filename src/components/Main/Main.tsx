@@ -56,7 +56,7 @@ const Main: React.FC = () => {
   );
 
   const [activeItemLabel, setActiveItemLabel] = useState<string>(
-    getActiveItem("")
+    getActiveItem(activeKey)
   );
 
   return (
