@@ -1,0 +1,14 @@
+.root {
+  height: 100%;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .list {
+    height: 100%;
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+}

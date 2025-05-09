@@ -1,0 +1,10 @@
+.root {
+  height: 100%;
+  overflow: auto;
+
+  .correct {
+    padding: 2px;
+    background-color: #ffff0066;
+    width: fit-content;
+  }
+}
