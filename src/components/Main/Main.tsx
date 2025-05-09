@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Button, Layout, Menu, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
@@ -10,7 +10,6 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import SaveAnswersForm from "../../pages/SaveAnswersForm";
 import AllQuestions from "../../pages/AllQuestions";
 import LoadQuestions from "../../pages/LoadQuestions";
@@ -20,21 +19,25 @@ const items = [
     key: "",
     icon: <UserOutlined />,
     label: "Загрузить вопросики",
+    element: <SaveAnswersForm />,
   },
   {
     key: "all",
     icon: <VideoCameraOutlined />,
     label: "Все вопросы",
+    element: <AllQuestions />,
   },
   {
     key: "3",
     icon: <QuestionCircleOutlined />,
     label: "Порешать тест",
+    element: <></>,
   },
   {
     key: "load",
     icon: <RollbackOutlined />,
     label: "Загрузить бэкап",
+    element: <LoadQuestions />,
   },
 ];
 
@@ -43,18 +46,17 @@ const getActiveItem = (key: string) => {
 };
 
 const Main: React.FC = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const initKey = useMemo(() => location.pathname.replace("/", ""), [location]);
-
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const [activeKey, setActiveKey] = useState<string>(
+    sessionStorage.getItem("_ap") ?? ""
+  );
+
   const [activeItemLabel, setActiveItemLabel] = useState<string>(
-    getActiveItem(initKey)
+    getActiveItem("")
   );
 
   return (
@@ -64,10 +66,11 @@ const Main: React.FC = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={[initKey]}
+          defaultSelectedKeys={[activeKey]}
           items={items}
           onSelect={(e) => {
-            navigate("/" + e.key);
+            sessionStorage.setItem("_ap", e.key);
+            setActiveKey(e.key);
             setActiveItemLabel(getActiveItem(e.key));
           }}
         />
@@ -95,11 +98,7 @@ const Main: React.FC = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          <Routes>
-            <Route path="/" element={<SaveAnswersForm />} />
-            <Route path="/all" element={<AllQuestions />} />
-            <Route path="/load" element={<LoadQuestions />} />
-          </Routes>
+          {items.find((e) => e.key === activeKey)?.element}
         </Content>
       </Layout>
     </Layout>
