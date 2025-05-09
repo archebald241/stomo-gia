@@ -4,9 +4,14 @@
     <meta charset="utf-8" />
     <title>Redirecting...</title>
     <script>
-      sessionStorage.redirect = location.href;
+      // Сохраняем текущий путь
+      const path = window.location.pathname;
+      // Убираем базовый путь /stomo-gia если он есть
+      const cleanPath = path.replace("/stomo-gia", "");
+      // Сохраняем путь для использования в index.html
+      sessionStorage.setItem("redirect", cleanPath);
     </script>
-    <meta http-equiv="refresh" content="0;URL='/'" />
+    <meta http-equiv="refresh" content="0;URL='/stomo-gia/'" />
   </head>
   <body></body>
 </html>
