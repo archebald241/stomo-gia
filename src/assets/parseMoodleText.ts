@@ -1,4 +1,4 @@
-export interface IAnswer {
+export interface IQuestion {
   number: string;
   question: string;
   options: string[];
@@ -9,7 +9,7 @@ export function parseMoodleText(rawText: string) {
   const lines = rawText.split("\n").map((line) => line.trim());
   const questions = [];
 
-  let currentQuestion: IAnswer | null = null;
+  let currentQuestion: IQuestion | null = null;
   let collectingOptions = false;
 
   for (let i = 0; i < lines.length; i++) {

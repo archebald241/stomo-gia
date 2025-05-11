@@ -13,6 +13,7 @@ import {
 import SaveAnswersForm from "../../pages/SaveAnswersForm";
 import AllQuestions from "../../pages/AllQuestions";
 import LoadQuestions from "../../pages/LoadQuestions";
+import Tests from "../../pages/Tests";
 
 const items = [
   {
@@ -31,7 +32,7 @@ const items = [
     key: "3",
     icon: <QuestionCircleOutlined />,
     label: "Порешать тест",
-    element: <></>,
+    element: <Tests />,
   },
   {
     key: "load",

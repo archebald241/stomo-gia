@@ -1,15 +1,17 @@
-import type { IAnswer } from "./parseMoodleText";
+import type { IForm } from "../pages/Tests/SolveTests/SolveTests";
+import type { IQuestion } from "./parseMoodleText";
 
 export const STORAGE_KEY = "saved_answers";
+export const ERRORS_STORAGE_KEY = "errors_questions";
 
-export const loadAnswersFromFile = (file: File): Promise<IAnswer[]> => {
+export const loadAnswersFromFile = (file: File): Promise<IQuestion[]> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
     reader.onload = (event) => {
       try {
         const content = event.target?.result as string;
-        const answers = JSON.parse(content) as IAnswer[];
+        const answers = JSON.parse(content) as IQuestion[];
         resolve(answers);
       } catch {
         reject(new Error("Failed to parse JSON file"));
@@ -25,12 +27,12 @@ export const loadAnswersFromFile = (file: File): Promise<IAnswer[]> => {
 };
 
 export const onSaveAnswers = (
-  answers: IAnswer[],
+  answers: IQuestion[],
   saveAsFile: boolean = true
 ) => {
   try {
     const existingAnswersJson = localStorage.getItem(STORAGE_KEY);
-    const existingAnswers: IAnswer[] = existingAnswersJson
+    const existingAnswers: IQuestion[] = existingAnswersJson
       ? JSON.parse(existingAnswersJson)
       : [];
 
@@ -71,4 +73,23 @@ export const onSaveAnswers = (
     console.error("Error saving answers:", error);
     throw error;
   }
+};
+
+export const saveErrorsQuestions = (formQuestions: IForm["questions"]) => {
+  const getQuestions = (formQuestions: any[], isCorrect: boolean) =>
+    formQuestions
+      .filter((e) => (e.answer === e.current) === isCorrect)
+      .map((e) => e.question);
+
+  const questions = getQuestions(formQuestions, false);
+  const corrects = getQuestions(formQuestions, true);
+
+  const savedErrors: string[] = JSON.parse(
+    localStorage.getItem(ERRORS_STORAGE_KEY) ?? "[]"
+  );
+
+  const uniqueErrors = savedErrors.filter((q) => !corrects.includes(q));
+  const result = [...new Set([...uniqueErrors, ...questions])];
+
+  localStorage.setItem(ERRORS_STORAGE_KEY, JSON.stringify(result));
 };

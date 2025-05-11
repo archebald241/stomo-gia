@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./styles.module.scss";
-import type { IAnswer } from "../../assets/parseMoodleText";
+import type { IQuestion } from "../../assets/parseMoodleText";
 
 interface IProps {
-  answers: IAnswer[];
+  answers: IQuestion[];
 }
 
 const AnswersList: React.FC<IProps> = ({ answers }) => {

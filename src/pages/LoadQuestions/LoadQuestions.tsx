@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./styles.module.scss";
 import type { UploadChangeParam } from "antd/es/upload";
-import { loadAnswersFromFile, onSaveAnswers } from "../../assets/saveAnsvers";
+import { loadAnswersFromFile, onSaveAnswers } from "../../assets/saveAnswers";
 import { Button, Form, notification, Upload } from "antd";
 import { InboxOutlined } from "@ant-design/icons";
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
-import { STORAGE_KEY } from "../../assets/saveAnsvers";
+import { STORAGE_KEY } from "../../assets/saveAnswers";
 import AnswersList from "../../components/AnswersList";
-import type { IAnswer } from "../../assets/parseMoodleText";
+import type { IQuestion } from "../../assets/parseMoodleText";
 import { Input } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
@@ -22,10 +22,12 @@ const normalizeText = (text: string): string => {
 };
 
 const AllQuestions: React.FC = () => {
-  const [questions, setQuestions] = useState<IAnswer[]>([]);
+  const [questions, setQuestions] = useState<IQuestion[]>([]);
 
   const onSearch = (search: string) => {
-    const q: IAnswer[] = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]");
+    const q: IQuestion[] = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) ?? "[]"
+    );
     const normalizedSearch = normalizeText(search);
     const searchedQ = q.filter((e) =>
       normalizeText(e.question).includes(normalizedSearch.toLowerCase())

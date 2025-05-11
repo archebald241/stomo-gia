@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import styles from "./styles.module.scss";
 import { Button, Checkbox, Divider, Form, Input } from "antd";
-import { parseMoodleText, type IAnswer } from "../../assets/parseMoodleText";
-import { onSaveAnswers } from "../../assets/saveAnsvers";
+import { parseMoodleText, type IQuestion } from "../../assets/parseMoodleText";
+import { onSaveAnswers } from "../../assets/saveAnswers";
 import AnswersList from "../../components/AnswersList";
 
 const SaveAnswersForm: React.FC = () => {
-  const [answers, setAnswers] = useState<IAnswer[]>([]);
+  const [answers, setAnswers] = useState<IQuestion[]>([]);
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const parseAnswers = parseMoodleText(e.target.value);
