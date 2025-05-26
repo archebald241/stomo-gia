@@ -1,4 +1,5 @@
 import type { IForm } from "../pages/Tests/SolveTests/SolveTests";
+import { useTestStore } from "../store/useTestStore";
 import type { IQuestion } from "./parseMoodleText";
 
 export const STORAGE_KEY = "saved_answers";
@@ -31,10 +32,7 @@ export const onSaveAnswers = (
   saveAsFile: boolean = true
 ) => {
   try {
-    const existingAnswersJson = localStorage.getItem(STORAGE_KEY);
-    const existingAnswers: IQuestion[] = existingAnswersJson
-      ? JSON.parse(existingAnswersJson)
-      : [];
+    const existingAnswers = useTestStore.getState().questions;
 
     const existingQuestionsMap = new Map(
       existingAnswers.map((answer) => [answer.question, answer])
@@ -53,7 +51,7 @@ export const onSaveAnswers = (
 
     const mergedAnswers = Array.from(existingQuestionsMap.values());
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(mergedAnswers));
+    useTestStore.getState().updateQuestions(mergedAnswers);
 
     if (saveAsFile) {
       const jsonString = JSON.stringify(mergedAnswers, null, 2);
@@ -91,5 +89,5 @@ export const saveErrorsQuestions = (formQuestions: IForm["questions"]) => {
   const uniqueErrors = savedErrors.filter((q) => !corrects.includes(q));
   const result = [...new Set([...uniqueErrors, ...questions])];
 
-  localStorage.setItem(ERRORS_STORAGE_KEY, JSON.stringify(result));
+  useTestStore.getState().updateErrorQuestions(result);
 };

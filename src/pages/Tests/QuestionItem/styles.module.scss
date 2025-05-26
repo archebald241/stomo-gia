@@ -1,0 +1,14 @@
+.question {
+  padding: 0 16px;
+  border-radius: 10px;
+  background-color: white;
+  border: 1px solid #f2f2f2;
+
+  &.error {
+    border-color: red;
+  }
+
+  &.success {
+    border-color: green;
+  }
+}

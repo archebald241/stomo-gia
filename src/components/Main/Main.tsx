@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, Layout, Menu, theme } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { Content, Header } from "antd/es/layout/layout";
@@ -47,7 +47,7 @@ const getActiveItem = (key: string) => {
 };
 
 const Main: React.FC = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -60,10 +60,20 @@ const Main: React.FC = () => {
     getActiveItem(activeKey)
   );
 
+  const isMobile = useMemo(() => {
+    const { width } = window.screen;
+    return width <= 768;
+  }, []);
+
   return (
-    <Layout style={{ height: "100%" }}>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="demo-logo-vertical" />
+    <Layout style={{ maxHeight: "100dvh", minHeight: "100%" }}>
+      <Sider
+        breakpoint="lg"
+        collapsedWidth={isMobile ? "0" : "80px"}
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+      >
         <Menu
           theme="dark"
           mode="inline"

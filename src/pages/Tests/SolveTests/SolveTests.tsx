@@ -1,15 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styles from "./styles.module.scss";
 import type { IQuestion } from "../../../assets/parseMoodleText";
-import { Button, Divider, Form, Popconfirm, Radio } from "antd";
+import { Button, Divider, Form, Popconfirm } from "antd";
 import classNames from "classnames";
 import { saveErrorsQuestions } from "../../../assets/saveAnswers";
-
-const style: React.CSSProperties = {
-  display: "flex",
-  flexDirection: "column",
-  gap: 8,
-};
+import QuestionItem from "../QuestionItem";
 
 export interface IForm {
   questions: {
@@ -25,17 +20,18 @@ interface IProps {
 
 const SolveTests: React.FC<IProps> = ({ questions }) => {
   const [form] = Form.useForm();
-
   const [errors, setErrors] = useState<number[]>([]);
   const [finished, setFinished] = useState(false);
 
-  const onFinish = (values: IForm) => {
+  const onFinish = useCallback((values: IForm) => {
     saveErrorsQuestions(values.questions);
-    values.questions.map(
-      (e, i) => e.answer !== e.current && setErrors((p) => [...p, i])
-    );
+    const newErrors = values.questions.reduce((acc: number[], e, i) => {
+      if (e.answer !== e.current) acc.push(i);
+      return acc;
+    }, []);
+    setErrors(newErrors);
     setFinished(true);
-  };
+  }, []);
 
   return (
     <Form
@@ -95,54 +91,13 @@ const SolveTests: React.FC<IProps> = ({ questions }) => {
           <Form.List name={"questions"}>
             {() => {
               return questions.map((question, index) => (
-                <div
+                <QuestionItem
                   key={question.number + "_" + index}
-                  className={classNames(styles.question, {
-                    [styles.error]: errors.includes(index),
-                    [styles.success]: finished && !errors.includes(index),
-                  })}
-                >
-                  <h3>
-                    {index + 1}. {question.question}
-                  </h3>
-                  <div>
-                    <Form.Item
-                      name={[index, "answer"]}
-                      label={"Выберите ответ:"}
-                      // rules={[
-                      //   {
-                      //     required: true,
-                      //     message: "Поле обязательно для заполнения",
-                      //   },
-                      // ]}
-                      initialValue={undefined}
-                    >
-                      <Radio.Group
-                        style={style}
-                        options={question.options.map((val) => ({
-                          value: val,
-                          label: val,
-                        }))}
-                        disabled={finished}
-                      />
-                    </Form.Item>
-                    <Form.Item
-                      name={[index, "current"]}
-                      noStyle
-                      initialValue={question.correctAnswer}
-                      hidden={!finished}
-                    >
-                      <div className={styles.current}>
-                        <b>Правильный ответ:</b> {question.correctAnswer}
-                      </div>
-                    </Form.Item>
-                    <Form.Item
-                      name={[index, "question"]}
-                      noStyle
-                      initialValue={question.question}
-                    ></Form.Item>
-                  </div>
-                </div>
+                  question={question}
+                  index={index}
+                  errors={errors}
+                  finished={finished}
+                />
               ));
             }}
           </Form.List>
